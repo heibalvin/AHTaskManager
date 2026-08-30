@@ -1,0 +1,33 @@
+{
+  "disable_persistent_config": true,
+  "use_tls_server": false,
+  "logging": {
+    "log_file_path": "/var/log/sync_gateway",
+    "console": {
+      "log_level": "debug",
+      "log_keys": ["*"]
+    }
+  },
+  "databases": {
+    "app_db": {
+      "server": "couchbase://couchbase-server",
+      "bucket": "default",
+      "username": "${COUCHBASE_SYNC_USER}",
+      "password": "${COUCHBASE_SYNC_PASSWORD}",
+      "enable_shared_bucket_access": true,
+      "num_index_replicas": 0,
+      "import_filter": "function(doc) { return true; }",
+      "users": {
+        "GUEST": {
+          "disabled": false,
+          "admin_channels": ["*"]
+        }
+      },
+      "sync": `
+        function(doc, oldDoc) {
+          channel("public");
+        }
+      `
+    }
+  }
+}
